@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ssafy.happyhouse.model.dao.BookMarkDao">
+	
+	<select id="listBookMark" resultType="bookMarkDto">
+		select no, user_no, dong, code, AptName, area, dealAmount, unitAmount, dealYear, dealMonth, dealDay, roadName, roadMain, roadSub
+		from bookmark
+		where user_no = #{user_no}
+	</select>
+	
+	<select id="getBookMarkInfo" parameterType="map" resultType="bookMarkDto">
+		select no, user_no, dong, code, AptName, area, dealAmount, unitAmount, dealYear, dealMonth, dealDay, roadName, roadMain, roadSub
+		from bookmark
+		where user_no = #{user_no}
+		and no = #{no}
+	</select>
+	
+	<insert id="insertBookMark" parameterType="bookMarkDto">
+		insert into bookmark(user_no, dong, code, AptName, area, dealAmount, unitAmount, dealYear, dealMonth, dealDay, roadName, roadMain, roadSub)
+		values(#{user_no}, #{dong}, #{code}, #{AptName}, #{area}, #{dealAmount}, #{unitAmount}, #{dealYear}, #{dealMonth}, #{dealDay}, #{roadName}, #{roadMain}, #{roadSub})
+	</insert>
+	
+	<delete id="deleteBookMark" parameterType="map">
+		delete from bookmark
+		where user_no = #{user_no}
+		and no = #{no}
+	</delete>
+</mapper>	

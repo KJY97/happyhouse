@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.dao.MemberDao">
+
+	<!-- 로그인 -->
+	<select id="login" parameterType="memberDto" resultType="memberDto">
+		select userid, username, email
+		from user
+		where userid = #{userid} and userpwd = #{userpwd}
+	</select>
+	
+	<!-- 전체 회원정보 조회 -->
+	<select id="listUser" resultType="memberDto">
+		select user_no, userid, username, email, joindate, platform, is_enabled
+		from user
+	</select>
+	
+	<!-- 회원정보 조회 -->
+	<select id="getUserInfo" parameterType="String" resultType="memberDto">
+		select user_no, userid, username, email, joindate, platform, is_enabled
+		from user
+		where userid = #{userid}
+	</select>
+	
+	<!-- id중복체크 -->
+	<select id="idCheck" parameterType="String" resultType="int">
+		select count(userid)
+		from user
+		where userid = #{userid}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterType="memberDto">
+	    insert into user (userid, username, userpwd, email, joindate, platform)
+	    values (#{userid}, #{username}, #{userpwd}, #{email}, now(), #{platform})
+	</insert>
+	
+	<!-- 회원정보수정 -->
+	<update id="updateMember" parameterType="memberDto">
+		update user 
+		set userpwd = #{userpwd}, username = #{username}, email = #{email} 
+		where userid = #{userid}
+	</update>
+	
+	<!-- 회원탈퇴 : NULL 처리-->
+	<delete id="deleteMember" parameterType="map">
+	    update user 
+	    set userid = NULL, userpwd = NULL, username = NULL, email = NULL, joindate = NULL, platform = NULL, is_enabled = "N"
+	    where user_no = #{user_no}
+	</delete>
+	
+	<!-- 회원탈퇴하면서 즐겨찾기 삭제 -->
+	<delete id="deleteBookMarkOfMember" parameterType="int">
+		delete from bookmark
+		where user_no = #{user_no}
+	</delete>
+	
+</mapper>

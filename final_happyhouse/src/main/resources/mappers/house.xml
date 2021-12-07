@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.dao.HouseDao">
+	
+	<!-- select box 도/광역시 조회 -->
+	<select id="getSido" resultType="sidoGugunCodeDto">
+		select left(sido_code,2) sidoCode, sido_name sidoName
+		from sidocode
+		order by sidoCode
+	</select>
+	
+	<!-- select box 시/군/구 조회 -->
+	<select id="getGugunInSido" parameterType="string" resultType="sidoGugunCodeDto">
+		select left(gugun_code,5) gugunCode, gugun_name gugunName
+		from guguncode
+		where left(gugun_code,2) = #{sido}
+		order by gugunCode
+	</select>
+	
+	<!-- select box 동 조회 -->
+	<select id="getDongInGugun" parameterType="string" resultType="houseInfoDto">
+		select distinct dong dongName, code dongCode
+		from houseinfo
+		where code = #{gugun}
+		order by dongName
+	</select>
+
+</mapper>

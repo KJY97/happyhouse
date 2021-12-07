@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.dao.QnADao">
+	
+	<!-- ============= Qnestion ============= -->
+	<!-- 전체 게시글 가져오기 -->
+	<select id="listQuestion" resultType="qnADto">
+		select question_no, user_no, username, title, content, answer_state, regtime
+		from Questions
+		order by question_no desc
+	</select>
+	
+	<!-- 질문 게시글 가져오기 -->
+	<select id="getQuestionInfo" parameterType="int" resultType="qnADto">
+		select q.question_no, user_no, username, title, content, regtime, answer_state, answer_no, answer, answer_time
+		from Questions q left outer join answers a
+		on q.question_no = a.question_no
+		where q.question_no = #{question_no}
+	</select>
+
+	<!-- 질문 게시글 작성 -->
+	<insert id="insertQuestion" parameterType="qnADto">
+		insert into Questions (user_no, username, title, content, regtime)
+		values (#{user_no}, #{username}, #{title}, #{content}, now())
+	</insert>
+	
+	<!-- 질문 게시글 수정 -->
+	<update id="updateQuestion" parameterType="qnADto">
+		update questions
+		set title = #{title}, content = #{content}
+		where question_no = #{question_no}
+		and user_no = #{user_no}
+	</update>
+	
+	<!-- 질문에 대해 답변 상태 업데이트 -->
+	<update id="updateState" parameterType="map">
+		update Questions
+		set answer_state = #{answer_state}
+		where question_no = #{question_no}
+	</update>
+	
+	<!-- 질문 게시글 삭제 -->
+	<delete id="deleteQuestion" parameterType="int">
+		delete from Questions
+		where question_no = #{question_no}
+	</delete>
+	
+	<!-- 해당 질문에 대한 답변 삭제 -->
+	<delete id="deleteAnswerOfQuestion" parameterType="int">
+		delete from answers
+		where question_no = #{question_no}
+	</delete>
+
+	<!-- ============= Answer ============= -->
+	<!-- question_no에 해당하는 답변 조회 -->
+	<select id="getAnswerInfo" resultType="AnswerDto">
+		select answer_no, answer, answer_time, question_no
+		from answers
+		where question_no = #{question_no}
+	</select>
+	
+	<!-- 답변 등록 -->
+	<insert id="insertAnswer" parameterType="AnswerDto">
+		insert into answers(answer, answer_time, question_no)
+		values (#{answer}, now(), #{question_no})
+	</insert>
+	
+	<!-- 답변 수정 -->
+	<update id="updateAnswer" parameterType="AnswerDto">
+		update answers
+		set answer = #{answer}
+		where answer_no = #{answer_no}
+	</update>
+
+	<!-- 답변 삭제 -->
+	<delete id="deleteAnswer" parameterType="int">
+		delete
+		from answers
+		where answer_no = #{answer_no}
+	</delete>
+	
+</mapper>
